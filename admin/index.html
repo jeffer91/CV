@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0e2458" />
+  <title>Administrador | CV Jefferson Villarreal</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body class="admin-body">
+  <header class="topbar admin-topbar">
+    <a class="brand" href="../"><span class="brand-mark">JV</span><span><strong>CV Admin</strong><small>Jefferson Villarreal</small></span></a>
+    <div class="admin-header-actions"><span id="backendBadge" class="badge warning">Supabase no conectado</span><a class="button ghost small" href="../">Ver perfil público</a></div>
+  </header>
+
+  <main class="admin-shell">
+    <section id="loginPanel" class="login-panel card-panel">
+      <p class="eyebrow">Acceso privado</p>
+      <h1>Administrador</h1>
+      <p>El PIN no se guarda en GitHub. Al conectar Supabase, el acceso se validará contra Supabase Auth.</p>
+      <form id="loginForm" class="form-stack">
+        <label>Cédula<input id="loginId" autocomplete="username" inputmode="numeric" placeholder="Cédula" required /></label>
+        <label>PIN<input id="loginPin" type="password" autocomplete="current-password" inputmode="numeric" maxlength="12" placeholder="PIN" required /></label>
+        <button class="button primary" type="submit">Ingresar</button>
+      </form>
+      <button id="localDemoBtn" class="button secondary full">Abrir modo local de configuración</button>
+      <p class="form-note">El modo local sirve para preparar la app en este dispositivo. No modifica información pública ni sube archivos.</p>
+    </section>
+
+    <section id="adminApp" class="admin-app hidden">
+      <div class="admin-tabs" role="tablist">
+        <button class="active" data-tab="dashboard">Resumen</button>
+        <button data-tab="profile">Perfil</button>
+        <button data-tab="evidence">Certificados</button>
+        <button data-tab="cv">CV de 1 página</button>
+        <button data-tab="settings">Conexión</button>
+      </div>
+
+      <div id="tab-dashboard" class="admin-tab active">
+        <div class="section-heading"><div><p class="eyebrow">Panel</p><h2>Resumen</h2></div><button id="logoutBtn" class="button ghost small">Cerrar sesión</button></div>
+        <div id="statsGrid" class="stats-grid"></div>
+        <div class="card-panel">
+          <h3>CV especializados preparados</h3>
+          <div id="profileChips" class="chip-wrap"></div>
+        </div>
+      </div>
+
+      <div id="tab-profile" class="admin-tab">
+        <div class="section-heading"><div><p class="eyebrow">Contenido</p><h2>Perfil profesional</h2></div><button id="saveLocalBtn" class="button primary small">Guardar borrador local</button></div>
+        <div class="card-panel form-grid two">
+          <label>Nombre<input id="editName" /></label>
+          <label>Título principal<input id="editHeadline" /></label>
+          <label>Correo<input id="editEmail" /></label>
+          <label>Teléfono / WhatsApp<input id="editPhone" /></label>
+          <label>LinkedIn<input id="editLinkedin" placeholder="https://..." /></label>
+          <label>Web pública<input id="editWebsite" /></label>
+        </div>
+        <div class="card-panel">
+          <h3>Resumen corto</h3>
+          <p class="form-note">Una línea por punto.</p>
+          <textarea id="editSummary" rows="6"></textarea>
+        </div>
+      </div>
+
+      <div id="tab-evidence" class="admin-tab">
+        <div class="section-heading"><div><p class="eyebrow">Archivos</p><h2>Certificados y evidencias</h2></div></div>
+        <div class="card-panel upload-panel">
+          <label>Selecciona curso / certificado<select id="evidenceSelect"></select></label>
+          <label>Archivo<input id="evidenceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" /></label>
+          <button id="uploadEvidenceBtn" class="button primary">Subir a Supabase</button>
+          <p id="uploadMessage" class="form-note">Necesitas conectar Supabase para almacenar archivos.</p>
+        </div>
+        <div id="evidenceAdminList" class="admin-list"></div>
+      </div>
+
+      <div id="tab-cv" class="admin-tab">
+        <div class="section-heading"><div><p class="eyebrow">Generador</p><h2>CV especializados de una página</h2></div></div>
+        <div class="cv-toolbar card-panel">
+          <label>Enfoque<select id="cvProfileSelect"></select></label>
+          <label>Empresa / vacante (opcional)<input id="cvTarget" placeholder="Ej. Coordinador de Calidad Educativa" /></label>
+          <button id="renderCvBtn" class="button primary">Actualizar vista</button>
+          <button id="printCvBtn" class="button secondary">Imprimir / guardar PDF</button>
+        </div>
+        <div id="cvPreview" class="cv-page" aria-label="Vista previa del CV"></div>
+      </div>
+
+      <div id="tab-settings" class="admin-tab">
+        <div class="section-heading"><div><p class="eyebrow">Backend</p><h2>Conexión con Supabase</h2></div></div>
+        <div class="card-panel">
+          <p>La app ya está preparada para Supabase. La URL y la clave pública <strong>anon</strong> pueden estar en el frontend; el PIN nunca debe escribirse en el repositorio.</p>
+          <div class="form-grid two">
+            <label>Supabase URL<input id="supabaseUrl" placeholder="https://xxxx.supabase.co" /></label>
+            <label>Supabase anon key<input id="supabaseAnon" type="password" placeholder="eyJ..." /></label>
+          </div>
+          <button id="saveSupabaseConfigBtn" class="button primary">Guardar conexión en este dispositivo</button>
+          <p class="form-note">Esta primera versión guarda la configuración localmente. Para producción, configura el proyecto y las políticas incluidas en <code>supabase/schema.sql</code>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/admin.js"></script>
+</body>
+</html>
