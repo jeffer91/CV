@@ -36,6 +36,8 @@ to authenticated
 using (bucket_id = 'certificados');
 
 -- Para el acceso del administrador, crear UN usuario en Supabase Auth.
--- La app transforma la cédula ingresada a: admin.<solo-digitos>@cv.local
--- y usa el PIN como contraseña. Conviene aumentar la longitud del PIN y
--- aplicar controles de intentos antes de usarlo en producción.
+-- La app transforma la cédula ingresada a:
+-- admin.<solo-digitos>@cv.jeffersonvillarreal.com
+-- y usa el PIN como contraseña.
+-- Conviene aplicar protección contra intentos repetidos y considerar un PIN
+-- más largo si el administrador se expone directamente a Internet.
