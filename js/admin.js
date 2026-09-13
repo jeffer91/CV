@@ -35,10 +35,10 @@
   }
 
   function hydrateForms(){
-    $('editName').value=data.profile.name||''; $('editHeadline').value=data.profile.headline||''; $('editEmail').value=data.profile.email||''; $('editPhone').value=data.profile.phone||''; $('editLinkedin').value=data.profile.linkedin||''; $('editWebsite').value=data.profile.website||''; $('editSummary').value=(data.profile.summary||[]).join('\n');
+    $('editName').value=data.profile.name||''; $('editNationalId').value=data.profile.nationalId||''; $('editHeadline').value=data.profile.headline||''; $('editEmail').value=data.profile.email||''; $('editPhone').value=data.profile.phone||''; $('editLinkedin').value=data.profile.linkedin||''; $('editWebsite').value=data.profile.website||''; $('editSummary').value=(data.profile.summary||[]).join('\n');
   }
   function collectProfile(){
-    data.profile={...data.profile,name:$('editName').value.trim(),headline:$('editHeadline').value.trim(),email:$('editEmail').value.trim(),phone:$('editPhone').value.trim(),linkedin:$('editLinkedin').value.trim(),website:$('editWebsite').value.trim(),summary:$('editSummary').value.split('\n').map(x=>x.trim()).filter(Boolean)};
+    data.profile={...data.profile,name:$('editName').value.trim(),nationalId:$('editNationalId').value.trim(),headline:$('editHeadline').value.trim(),email:$('editEmail').value.trim(),phone:$('editPhone').value.trim(),linkedin:$('editLinkedin').value.trim(),website:$('editWebsite').value.trim(),summary:$('editSummary').value.split('\n').map(x=>x.trim()).filter(Boolean)};
   }
   function renderDashboard(){
     $('statsGrid').innerHTML=[['Experiencias',data.experience.length],['Títulos',data.education.length],['Cursos',data.courses.length],['CV especializados',data.cvProfiles.length]].map(([l,v])=>`<div class="stat"><strong>${v}</strong><span>${l}</span></div>`).join('');
@@ -46,17 +46,26 @@
   }
   function fillCvProfiles(){ $('cvProfileSelect').innerHTML=data.cvProfiles.map(p=>`<option value="${p.id}">${escapeHtml(p.label)}</option>`).join(''); }
   function renderEvidence(){
-    $('evidenceSelect').innerHTML=data.courses.map(c=>`<option value="${c.id}">${escapeHtml(c.category)} · ${escapeHtml(c.title)}</option>`).join('');
-    $('evidenceAdminList').innerHTML=data.courses.map(c=>`<div class="admin-list-row"><div><strong>${escapeHtml(c.title)}</strong><small>${escapeHtml(c.issuer)} · ${escapeHtml(c.category)}</small></div><span class="badge ${c.url?'success':'warning'}">${c.url?'Cargado':'Sin archivo'}</span></div>`).join('');
+    const educationOptions=data.education.map(x=>`<option value="education:${x.id}">Título · ${escapeHtml(x.degree)} · ${escapeHtml(x.field)}</option>`).join('');
+    const courseOptions=data.courses.map(c=>`<option value="course:${c.id}">${escapeHtml(c.category)} · ${escapeHtml(c.title)}</option>`).join('');
+    $('evidenceSelect').innerHTML=educationOptions+courseOptions;
+    const educationRows=data.education.map(x=>`<div class="admin-list-row"><div><strong>${escapeHtml(x.degree)} · ${escapeHtml(x.field)}</strong><small>${escapeHtml(x.institution)} · Título académico</small></div><span class="badge ${x.evidence?'success':'warning'}">${x.evidence?'Cargado':'Sin archivo'}</span></div>`).join('');
+    const courseRows=data.courses.map(c=>`<div class="admin-list-row"><div><strong>${escapeHtml(c.title)}</strong><small>${escapeHtml(c.issuer)} · ${escapeHtml(c.category)}</small></div><span class="badge ${c.url?'success':'warning'}">${c.url?'Cargado':'Sin archivo'}</span></div>`).join('');
+    $('evidenceAdminList').innerHTML=educationRows+courseRows;
   }
   async function uploadEvidence(){
     if(!supabaseClient){ $('uploadMessage').textContent='Conecta Supabase primero.'; return; }
-    const file=$('evidenceFile').files?.[0]; const course=data.courses.find(c=>c.id===$('evidenceSelect').value); if(!file||!course){$('uploadMessage').textContent='Selecciona un registro y un archivo.';return}
+    const file=$('evidenceFile').files?.[0];
+    const [type,id]=String($('evidenceSelect').value||'').split(':');
+    const item=type==='education'?data.education.find(x=>x.id===id):data.courses.find(x=>x.id===id);
+    if(!file||!item){$('uploadMessage').textContent='Selecciona un registro y un archivo.';return}
     $('uploadMessage').textContent='Subiendo…';
-    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'-'); const path=`${course.id}/${Date.now()}-${safeName}`;
+    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'-'); const path=`${type}/${id}/${Date.now()}-${safeName}`;
     const {error}=await supabaseClient.storage.from('certificados').upload(path,file,{upsert:false});
     if(error){$('uploadMessage').textContent='Error: '+error.message;return}
-    const {data:pub}=supabaseClient.storage.from('certificados').getPublicUrl(path); course.url=pub.publicUrl; saveDraft(); renderEvidence(); $('uploadMessage').textContent='Archivo cargado y vinculado.';
+    const {data:pub}=supabaseClient.storage.from('certificados').getPublicUrl(path);
+    if(type==='education') item.evidence=pub.publicUrl; else item.url=pub.publicUrl;
+    saveDraft(); renderEvidence(); $('uploadMessage').textContent='Archivo cargado y vinculado.';
   }
 
   function getAllSkills(){ return data.skills.flatMap(g=>g.items.map(i=>i.name)); }
@@ -65,7 +74,7 @@
   function renderCV(){
     const profile=data.cvProfiles.find(p=>p.id===$('cvProfileSelect').value)||data.cvProfiles[0]; if(!profile)return;
     const target=$('cvTarget').value.trim(); const experiences=experienceFor(profile); const skills=profile.skillKeywords.filter(k=>getAllSkills().includes(k)); const courses=selectedCourses(profile);
-    const publicUrl=data.profile.website||location.href.replace(/admin\/?$/,'');
+    const publicUrl=new URL('../', location.href).href;
     $('cvPreview').style.setProperty('--cv-accent',profile.theme);
     $('cvPreview').innerHTML=`
       <div class="cv-head">
