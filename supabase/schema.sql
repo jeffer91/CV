@@ -35,6 +35,42 @@ on storage.objects for delete
 to authenticated
 using (bucket_id = 'certificados');
 
+-- Relación pública entre cada título/curso y su archivo de evidencia.
+create table if not exists public.evidence_links (
+  entity_type text not null check (entity_type in ('education','course')),
+  entity_id text not null,
+  public_url text not null,
+  updated_at timestamptz not null default now(),
+  primary key (entity_type, entity_id)
+);
+
+alter table public.evidence_links enable row level security;
+
+drop policy if exists "evidence_links_public_read" on public.evidence_links;
+create policy "evidence_links_public_read"
+on public.evidence_links for select
+to public
+using (true);
+
+drop policy if exists "evidence_links_authenticated_insert" on public.evidence_links;
+create policy "evidence_links_authenticated_insert"
+on public.evidence_links for insert
+to authenticated
+with check (true);
+
+drop policy if exists "evidence_links_authenticated_update" on public.evidence_links;
+create policy "evidence_links_authenticated_update"
+on public.evidence_links for update
+to authenticated
+using (true)
+with check (true);
+
+drop policy if exists "evidence_links_authenticated_delete" on public.evidence_links;
+create policy "evidence_links_authenticated_delete"
+on public.evidence_links for delete
+to authenticated
+using (true);
+
 -- Para el acceso del administrador, crear UN usuario en Supabase Auth.
 -- La app transforma la cédula ingresada a:
 -- admin.<solo-digitos>@cv.jeffersonvillarreal.com
