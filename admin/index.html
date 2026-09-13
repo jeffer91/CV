@@ -17,14 +17,21 @@
     <section id="loginPanel" class="login-panel card-panel">
       <p class="eyebrow">Acceso privado</p>
       <h1>Administrador</h1>
-      <p>El PIN no se guarda en GitHub. Al conectar Supabase, el acceso se validará contra Supabase Auth.</p>
+      <p>El PIN no se guarda en GitHub. El acceso se valida mediante Supabase Auth.</p>
       <form id="loginForm" class="form-stack">
         <label>Cédula<input id="loginId" autocomplete="username" inputmode="numeric" placeholder="Cédula" required /></label>
         <label>PIN<input id="loginPin" type="password" autocomplete="current-password" inputmode="numeric" maxlength="12" placeholder="PIN" required /></label>
         <button class="button primary" type="submit">Ingresar</button>
       </form>
-      <button id="localDemoBtn" class="button secondary full">Abrir modo local de configuración</button>
-      <p class="form-note">El modo local sirve para preparar la app en este dispositivo. No modifica información pública ni sube archivos.</p>
+      <details class="setup-details">
+        <summary>Conectar Supabase por primera vez</summary>
+        <div class="form-stack setup-box">
+          <label>Supabase URL<input id="bootstrapSupabaseUrl" placeholder="https://xxxx.supabase.co" /></label>
+          <label>Supabase anon key<input id="bootstrapSupabaseAnon" type="password" placeholder="eyJ..." /></label>
+          <button id="saveBootstrapConfigBtn" class="button secondary" type="button">Guardar conexión</button>
+          <p class="form-note">Usa únicamente la clave pública <strong>anon</strong>. No pegues aquí la clave <strong>service_role</strong>.</p>
+        </div>
+      </details>
     </section>
 
     <section id="adminApp" class="admin-app hidden">
@@ -88,13 +95,13 @@
       <div id="tab-settings" class="admin-tab">
         <div class="section-heading"><div><p class="eyebrow">Backend</p><h2>Conexión con Supabase</h2></div></div>
         <div class="card-panel">
-          <p>La app ya está preparada para Supabase. La URL y la clave pública <strong>anon</strong> pueden estar en el frontend; el PIN nunca debe escribirse en el repositorio.</p>
+          <p>La URL y la clave pública <strong>anon</strong> pueden usarse en el frontend. El PIN nunca debe escribirse en el repositorio.</p>
           <div class="form-grid two">
             <label>Supabase URL<input id="supabaseUrl" placeholder="https://xxxx.supabase.co" /></label>
             <label>Supabase anon key<input id="supabaseAnon" type="password" placeholder="eyJ..." /></label>
           </div>
           <button id="saveSupabaseConfigBtn" class="button primary">Guardar conexión en este dispositivo</button>
-          <p class="form-note">Esta primera versión guarda la configuración localmente. Para producción, configura el proyecto y las políticas incluidas en <code>supabase/schema.sql</code>.</p>
+          <p class="form-note">Configura el proyecto y las políticas incluidas en <code>supabase/schema.sql</code>.</p>
         </div>
       </div>
     </section>
