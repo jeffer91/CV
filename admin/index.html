@@ -49,6 +49,7 @@
         <div class="section-heading"><div><p class="eyebrow">Contenido</p><h2>Perfil profesional</h2></div><button id="saveLocalBtn" class="button primary small">Guardar borrador local</button></div>
         <div class="card-panel form-grid two">
           <label>Nombre<input id="editName" /></label>
+          <label>Cédula (solo para CV)<input id="editNationalId" inputmode="numeric" /></label>
           <label>Título principal<input id="editHeadline" /></label>
           <label>Correo<input id="editEmail" /></label>
           <label>Teléfono / WhatsApp<input id="editPhone" /></label>
@@ -65,7 +66,7 @@
       <div id="tab-evidence" class="admin-tab">
         <div class="section-heading"><div><p class="eyebrow">Archivos</p><h2>Certificados y evidencias</h2></div></div>
         <div class="card-panel upload-panel">
-          <label>Selecciona curso / certificado<select id="evidenceSelect"></select></label>
+          <label>Selecciona título / curso / certificado<select id="evidenceSelect"></select></label>
           <label>Archivo<input id="evidenceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" /></label>
           <button id="uploadEvidenceBtn" class="button primary">Subir a Supabase</button>
           <p id="uploadMessage" class="form-note">Necesitas conectar Supabase para almacenar archivos.</p>
