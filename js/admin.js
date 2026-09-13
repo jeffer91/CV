@@ -9,7 +9,11 @@
   function loadDraft(){ return safeParse(localStorage.getItem('cv_admin_draft')); }
   function saveDraft(){ localStorage.setItem('cv_admin_draft', JSON.stringify(data)); localStorage.setItem('cv_public_override', JSON.stringify({profile:data.profile})); }
   function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-  function config(){ return safeParse(localStorage.getItem('cv_supabase_config')) || {}; }
+  function config(){
+    const local=safeParse(localStorage.getItem('cv_supabase_config'))||{};
+    const shared=window.CV_SUPABASE_CONFIG||{};
+    return local.url&&local.anon ? local : shared;
+  }
   function adminEmailFromId(id){ const clean=String(id||'').replace(/\D/g,''); return clean ? `admin.${clean}@cv.jeffersonvillarreal.com` : ''; }
 
   function fillSupabaseFields(cfg){
@@ -82,8 +86,11 @@
     const {error}=await supabaseClient.storage.from('certificados').upload(path,file,{upsert:false});
     if(error){$('uploadMessage').textContent='Error: '+error.message;return}
     const {data:pub}=supabaseClient.storage.from('certificados').getPublicUrl(path);
-    if(type==='education') item.evidence=pub.publicUrl; else item.url=pub.publicUrl;
-    saveDraft(); renderEvidence(); $('uploadMessage').textContent='Archivo cargado y vinculado.';
+    const publicUrl=pub.publicUrl;
+    if(type==='education') item.evidence=publicUrl; else item.url=publicUrl;
+    const {error:linkError}=await supabaseClient.from('evidence_links').upsert({entity_type:type,entity_id:id,public_url:publicUrl,updated_at:new Date().toISOString()},{onConflict:'entity_type,entity_id'});
+    if(linkError){$('uploadMessage').textContent='Archivo cargado, pero no se pudo publicar el enlace: '+linkError.message;return}
+    saveDraft(); renderEvidence(); $('uploadMessage').textContent='Archivo cargado y publicado en el perfil.';
   }
 
   function getAllSkills(){ return data.skills.flatMap(g=>g.items.map(i=>i.name)); }
