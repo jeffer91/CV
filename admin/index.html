@@ -10,28 +10,39 @@
 <body class="admin-body">
 <header class="topbar admin-topbar">
   <a class="brand" href="../"><span class="brand-mark">JV</span><span><strong>CV Admin</strong><small>Gestor maestro</small></span></a>
-  <div class="admin-header-actions"><span id="backendBadge" class="badge warning">Supabase no conectado</span><button id="publishBtn" class="button primary small hidden">Publicar cambios</button><a class="button ghost small" href="../">Ver sitio</a></div>
+  <div class="admin-header-actions">
+    <span id="backendBadge" class="badge warning">Supabase no conectado</span>
+    <span id="draftBadge" class="badge neutral hidden">Sin cambios</span>
+    <button id="saveDraftBtn" class="button ghost small hidden">Guardar borrador</button>
+    <button id="previewBtn" class="button secondary small hidden">Vista previa</button>
+    <button id="publishBtn" class="button primary small hidden">Publicar cambios</button>
+    <a class="button ghost small" href="../">Ver sitio</a>
+  </div>
 </header>
 
 <main class="admin-shell">
   <section id="loginPanel" class="login-panel card-panel">
-    <p class="eyebrow">Acceso privado</p><h1>Administrador</h1>
-    <p>Gestiona desde aquí todos los CV, experiencias, cursos, evidencias y documentos. La cédula y el PIN no se guardan en GitHub.</p>
+    <p class="eyebrow">Acceso privado</p>
+    <h1>Administrador</h1>
+    <p>Gestiona desde aquí todo tu expediente profesional y los CV públicos. La cédula y el PIN no se guardan en GitHub.</p>
     <form id="loginForm" class="form-stack">
-      <label>Cédula<input id="loginId" autocomplete="username" inputmode="numeric" required /></label>
-      <label>PIN<input id="loginPin" type="password" autocomplete="current-password" required /></label>
+      <label>Cédula<input id="loginId" autocomplete="username" inputmode="numeric" placeholder="Cédula" required /></label>
+      <label>PIN<input id="loginPin" type="password" autocomplete="current-password" placeholder="PIN" required /></label>
       <button class="button primary" type="submit">Ingresar</button>
     </form>
-    <details class="setup-details"><summary>Conectar Supabase por primera vez</summary><div class="form-stack setup-box">
-      <label>Supabase URL<input id="bootstrapSupabaseUrl" /></label>
-      <label>Supabase anon key<input id="bootstrapSupabaseAnon" type="password" /></label>
-      <button id="saveBootstrapConfigBtn" class="button secondary" type="button">Guardar conexión</button>
-      <p class="form-note">Solo usa la clave pública anon. Nunca uses service_role en el navegador.</p>
-    </div></details>
+    <details class="setup-details">
+      <summary>Conectar Supabase por primera vez</summary>
+      <div class="form-stack setup-box">
+        <label>Supabase URL<input id="bootstrapSupabaseUrl" placeholder="https://xxxx.supabase.co" /></label>
+        <label>Supabase anon key<input id="bootstrapSupabaseAnon" type="password" placeholder="eyJ..." /></label>
+        <button id="saveBootstrapConfigBtn" class="button secondary" type="button">Guardar conexión</button>
+        <p class="form-note">Usa únicamente la clave pública <strong>anon</strong>. Nunca pegues aquí la clave <strong>service_role</strong>.</p>
+      </div>
+    </details>
   </section>
 
   <section id="adminApp" class="admin-app hidden">
-    <div class="admin-tabs">
+    <div class="admin-tabs" role="tablist">
       <button class="active" data-tab="dashboard">Resumen</button>
       <button data-tab="profile">Perfil</button>
       <button data-tab="content">Contenido</button>
@@ -44,66 +55,108 @@
     <div id="tab-dashboard" class="admin-tab active">
       <div class="section-heading"><div><p class="eyebrow">Panel</p><h2>Resumen</h2></div><button id="logoutBtn" class="button ghost small">Cerrar sesión</button></div>
       <div id="statsGrid" class="stats-grid"></div>
-      <div class="card-panel"><h3>Perfiles públicos</h3><div id="profileChips" class="chip-wrap"></div></div>
+      <div class="dashboard-grid">
+        <div class="card-panel"><div class="panel-title-row"><div><p class="eyebrow">Control de calidad</p><h3>Información pendiente</h3></div><span id="completionBadge" class="badge warning"></span></div><div id="issuesList" class="check-list"></div></div>
+        <div class="card-panel"><p class="eyebrow">Publicación</p><h3>Perfiles públicos</h3><div id="profileChips" class="chip-wrap"></div></div>
+      </div>
+      <div class="card-panel"><div class="panel-title-row"><div><p class="eyebrow">Versiones</p><h3>Historial de publicaciones</h3></div><button id="refreshHistoryBtn" class="button ghost small">Actualizar</button></div><div id="historyList" class="admin-list"><p class="muted">El historial aparecerá cuando publiques desde este administrador.</p></div></div>
     </div>
 
     <div id="tab-profile" class="admin-tab">
       <div class="section-heading"><div><p class="eyebrow">Identidad profesional</p><h2>Perfil maestro</h2></div></div>
       <div class="card-panel form-grid two">
-        <label>Nombre<input id="editName" /></label><label>Título principal<input id="editHeadline" /></label>
-        <label>Correo<input id="editEmail" /></label><label>Teléfono<input id="editPhone" /></label>
-        <label>LinkedIn<input id="editLinkedin" /></label><label>Web<input id="editWebsite" /></label>
+        <label>Nombre<input id="editName" /></label>
+        <label>Título principal<input id="editHeadline" /></label>
+        <label>Correo<input id="editEmail" /></label>
+        <label>Teléfono / WhatsApp<input id="editPhone" /></label>
+        <label>LinkedIn<input id="editLinkedin" placeholder="https://..." /></label>
+        <label>Web pública<input id="editWebsite" /></label>
         <label>Ubicación<input id="editLocation" /></label>
       </div>
-      <div class="card-panel"><h3>Resumen</h3><p class="form-note">Una idea por línea.</p><textarea id="editSummary" rows="7"></textarea><button id="applyProfileBtn" class="button secondary small">Aplicar al borrador</button></div>
+      <div class="card-panel"><h3>Resumen corto</h3><p class="form-note">Una idea por línea.</p><textarea id="editSummary" rows="7"></textarea><button id="applyProfileBtn" class="button secondary small">Aplicar al borrador</button></div>
     </div>
 
     <div id="tab-content" class="admin-tab">
-      <div class="section-heading"><div><p class="eyebrow">Base maestra</p><h2>Contenido del CV</h2></div><button id="addItemBtn" class="button primary small">Añadir</button></div>
-      <div class="card-panel content-toolbar"><label>Sección<select id="collectionSelect"></select></label><p class="form-note">Edita, ordena o elimina registros. Los cambios se hacen públicos al pulsar “Publicar cambios”.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">Base maestra</p><h2>Contenido del CV</h2></div><button id="addItemBtn" class="button primary small">Añadir registro</button></div>
+      <div class="card-panel content-toolbar">
+        <label>Sección<select id="collectionSelect"></select></label>
+        <div class="content-toolbar-copy"><strong>Un dato, varios CV</strong><p class="form-note">Edita la información una sola vez y usa “Asignar CV” para decidir exactamente dónde aparece, su prioridad, orden y texto específico.</p></div>
+      </div>
       <div id="contentList" class="admin-list"></div>
     </div>
 
     <div id="tab-profiles" class="admin-tab">
       <div class="section-heading"><div><p class="eyebrow">URLs públicas</p><h2>Tipos de CV</h2></div><button id="addProfileBtn" class="button primary small">Crear perfil</button></div>
+      <div class="card-panel notice-card"><strong>Los perfiles son vistas del CV maestro.</strong><p>Cada perfil puede tener título, resumen, color y etiquetas propias. Puedes activarlo u ocultarlo sin borrar información.</p></div>
       <div id="profilesAdminList" class="admin-list"></div>
     </div>
 
     <div id="tab-documents" class="admin-tab">
       <div class="section-heading"><div><p class="eyebrow">Evidencias</p><h2>Documentos</h2></div></div>
       <div class="card-panel upload-panel">
-        <label>Tipo<select id="evidenceType"><option value="education">Título / estudio</option><option value="teachingExperience">Experiencia docente</option><option value="courses">Curso / certificado</option><option value="projects">Proyecto</option><option value="publications">Publicación</option></select></label>
-        <label>Registro<select id="evidenceEntity"></select></label>
+        <label>¿Qué acredita?<select id="evidenceType">
+          <option value="education">Título / estudio</option>
+          <option value="experience">Experiencia laboral</option>
+          <option value="teachingExperience">Experiencia docente</option>
+          <option value="courses">Curso / certificado</option>
+          <option value="projects">Proyecto</option>
+          <option value="publications">Publicación</option>
+        </select></label>
+        <label>Registro relacionado<select id="evidenceEntity"></select></label>
         <label>Archivo público<input id="evidenceFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" /></label>
         <button id="uploadEvidenceBtn" class="button primary">Subir evidencia</button>
-        <p id="uploadMessage" class="form-note">Las evidencias públicas pueden aparecer en los CV.</p>
+        <p id="uploadMessage" class="form-note">El archivo se vinculará al registro seleccionado y podrá mostrarse en los CV.</p>
       </div>
+
       <div class="card-panel upload-panel">
-        <label>Nombre del documento<input id="privateDocName" placeholder="Ej. Cédula" /></label>
+        <label>Nombre del documento<input id="privateDocName" placeholder="Ej. Cédula de identidad" /></label>
         <label>Archivo privado<input id="privateDocFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp" /></label>
         <button id="uploadPrivateBtn" class="button secondary">Guardar privado</button>
-        <p class="form-note">Los documentos privados no tienen lectura pública.</p>
+        <p class="form-note">Documentos sensibles: no tienen lectura pública y se abren mediante enlace temporal autenticado.</p>
       </div>
       <div id="privateDocsList" class="admin-list"></div>
     </div>
 
     <div id="tab-cv" class="admin-tab">
-      <div class="section-heading"><div><p class="eyebrow">Generador</p><h2>CV de una página</h2></div></div>
-      <div class="cv-toolbar card-panel"><label>Perfil<select id="cvProfileSelect"></select></label><label>Vacante / empresa<input id="cvTarget" /></label><button id="renderCvBtn" class="button primary">Actualizar</button><button id="printCvBtn" class="button secondary">Imprimir / PDF</button></div>
-      <div id="cvPreview" class="cv-page"></div>
+      <div class="section-heading"><div><p class="eyebrow">Vista previa</p><h2>CV especializado de una página</h2></div></div>
+      <div class="cv-toolbar card-panel">
+        <label>Perfil<select id="cvProfileSelect"></select></label>
+        <label>Vacante / empresa (opcional)<input id="cvTarget" placeholder="Ej. Coordinador Académico · Universidad X" /></label>
+        <button id="renderCvBtn" class="button primary">Actualizar vista</button>
+        <button id="printCvBtn" class="button secondary">Imprimir / PDF</button>
+      </div>
+      <div id="cvPreview" class="cv-page" aria-label="Vista previa del CV"></div>
     </div>
 
     <div id="tab-settings" class="admin-tab">
-      <div class="section-heading"><div><p class="eyebrow">Backend</p><h2>Conexión Supabase</h2></div></div>
-      <div class="card-panel form-grid two"><label>Supabase URL<input id="supabaseUrl" /></label><label>Supabase anon key<input id="supabaseAnon" type="password" /></label></div>
-      <button id="saveSupabaseConfigBtn" class="button primary">Guardar conexión</button>
+      <div class="section-heading"><div><p class="eyebrow">Backend</p><h2>Conexión con Supabase</h2></div></div>
+      <div class="card-panel">
+        <p>La URL y la clave pública <strong>anon</strong> pueden estar en el navegador. Las credenciales privadas no.</p>
+        <div class="form-grid two"><label>Supabase URL<input id="supabaseUrl" placeholder="https://xxxx.supabase.co" /></label><label>Supabase anon key<input id="supabaseAnon" type="password" placeholder="eyJ..." /></label></div>
+        <button id="saveSupabaseConfigBtn" class="button primary">Guardar conexión en este dispositivo</button>
+      </div>
     </div>
   </section>
 </main>
 
-<dialog id="editorDialog" class="editor-dialog"><div class="dialog-head"><div><p class="eyebrow">Editar registro</p><h2 id="editorTitle">Registro</h2></div><button id="closeEditorBtn" class="button ghost small">Cerrar</button></div><div id="editorFields" class="form-grid two"></div><div class="dialog-actions"><button id="deleteItemBtn" class="button danger">Eliminar</button><button id="saveItemBtn" class="button primary">Guardar registro</button></div></dialog>
+<dialog id="editorDialog" class="editor-dialog">
+  <div class="dialog-head"><div><p class="eyebrow">Editar registro</p><h2 id="editorTitle">Registro</h2></div><button id="closeEditorBtn" class="button ghost small">Cerrar</button></div>
+  <div id="editorFields" class="form-grid two"></div>
+  <div class="dialog-actions"><button id="deleteItemBtn" class="button danger">Eliminar</button><button id="saveItemBtn" class="button primary">Guardar registro</button></div>
+</dialog>
+
+<dialog id="placementDialog" class="editor-dialog placement-dialog">
+  <div class="dialog-head"><div><p class="eyebrow">Distribución</p><h2 id="placementTitle">Asignar a CV</h2><p class="form-note">Modo manual: solo aparecerá en los perfiles que marques.</p></div><button id="closePlacementBtn" class="button ghost small">Cerrar</button></div>
+  <div class="placement-actions"><button id="automaticPlacementBtn" class="button ghost small">Volver a selección automática</button></div>
+  <div id="placementList" class="placement-list"></div>
+  <div class="dialog-actions"><span></span><button id="savePlacementBtn" class="button primary">Guardar asignación</button></div>
+</dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-<script src="../js/config.js"></script><script src="../js/data.js"></script><script src="../js/storage.js"></script><script src="../js/admin.js"></script>
-</body></html>
+<script src="../js/config.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/storage.js"></script>
+<script src="../js/admin.js"></script>
+</body>
+</html>
