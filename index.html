@@ -3,107 +3,64 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Perfil profesional de Jefferson Villarreal: educación, gestión académica, calidad, procesos, mecatrónica e innovación." />
+  <meta name="description" content="Perfiles profesionales de Jefferson Villarreal: gestión académica, docencia, ingeniería, procesos, fabricación digital y marketing." />
   <meta name="theme-color" content="#0e2458" />
-  <title>Jefferson Villarreal | Perfil profesional</title>
+  <title>Jefferson Villarreal | Perfiles profesionales</title>
   <link rel="stylesheet" href="./css/styles.css" />
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#inicio" aria-label="Ir al inicio">
-      <span class="brand-mark">JV</span>
-      <span><strong>Jefferson Villarreal</strong><small>Perfil profesional</small></span>
-    </a>
+    <a class="brand" href="#inicio"><span class="brand-mark">JV</span><span><strong>Jefferson Villarreal</strong><small>Perfiles profesionales</small></span></a>
     <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">☰</button>
-    <nav id="mainNav" class="main-nav" aria-label="Navegación principal">
-      <a href="#experiencia">Experiencia</a>
-      <a href="#formacion">Formación</a>
-      <a href="#proyectos">Proyectos</a>
-      <a href="#publicaciones">Publicaciones</a>
-      <a href="#certificados">Certificados</a>
-      <a href="#referencias">Referencias</a>
+    <nav id="mainNav" class="main-nav">
+      <a href="#perfiles">Perfiles</a><a href="#trayectoria">Trayectoria</a><a href="#formacion">Formación</a><a href="#proyectos">Proyectos</a>
     </nav>
   </header>
 
   <main>
     <section id="inicio" class="hero section-shell">
-      <div class="hero-photo-wrap">
-        <img class="hero-photo" src="./assets/profile.svg" alt="Jefferson Villarreal" />
-      </div>
+      <div class="hero-photo-wrap"><img class="hero-photo" src="./assets/profile.svg" alt="Jefferson Villarreal" /></div>
       <div class="hero-copy">
-        <p class="eyebrow">Educación · Gestión · Procesos · Calidad · Tecnología</p>
-        <h1>Jefferson Villarreal</h1>
-        <p class="hero-title">Magíster en Diseño Industrial y de Procesos · Ingeniero Mecatrónico · Gestor académico</p>
+        <p class="eyebrow">Educación · Ingeniería · Procesos · Marketing</p>
+        <h1 id="publicName">Jefferson Villarreal</h1>
+        <p id="publicHeadline" class="hero-title"></p>
         <div id="summaryBullets" class="summary-bullets"></div>
         <div id="contactActions" class="contact-actions"></div>
       </div>
       <aside class="hero-card">
-        <span class="status-dot"></span>
-        <strong>Perfil profesional completo</strong>
-        <p>Esta página amplía la información de mis CV especializados e incluye evidencias, proyectos y certificados.</p>
-        <a class="button secondary" href="#certificados">Ver evidencias</a>
+        <strong>Un perfil maestro, varios CV</strong>
+        <p>Selecciona el enfoque profesional que quieres consultar. Cada enlace prioriza experiencia, competencias y evidencias relacionadas.</p>
+        <a class="button secondary" href="#perfiles">Ver perfiles</a>
       </aside>
     </section>
 
-    <section class="quick-nav section-shell" aria-label="Accesos rápidos">
-      <a href="#experiencia"><span>01</span> Experiencia</a>
-      <a href="#formacion"><span>02</span> Formación</a>
-      <a href="#competencias"><span>03</span> Competencias</a>
-      <a href="#proyectos"><span>04</span> Proyectos</a>
-      <a href="#publicaciones"><span>05</span> Publicaciones</a>
-      <a href="#certificados"><span>06</span> Certificados</a>
+    <section id="perfiles" class="section-shell content-section">
+      <div class="section-heading"><div><p class="eyebrow">CV abiertos</p><h2>Perfiles profesionales</h2></div><p>El contenido se administra desde una sola base maestra.</p></div>
+      <div id="profileGroups" class="profile-groups"></div>
     </section>
 
-    <section id="experiencia" class="section-shell content-section">
-      <div class="section-heading"><div><p class="eyebrow">Trayectoria</p><h2>Experiencia laboral</h2></div><p>Funciones y resultados organizados para lectura rápida.</p></div>
+    <section id="trayectoria" class="section-shell content-section">
+      <div class="section-heading"><div><p class="eyebrow">Resumen</p><h2>Trayectoria principal</h2></div></div>
       <div id="experienceList" class="timeline"></div>
     </section>
 
     <section id="formacion" class="section-shell content-section">
-      <div class="section-heading"><div><p class="eyebrow">Formación</p><h2>Educación</h2></div><p>Títulos y estudios de posgrado.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">Formación</p><h2>Educación</h2></div></div>
       <div id="educationGrid" class="cards-grid"></div>
     </section>
 
-    <section id="competencias" class="section-shell content-section">
-      <div class="section-heading"><div><p class="eyebrow">Capacidades</p><h2>Competencias por área</h2></div><p>Cada elemento puede vincularse a una evidencia cuando exista.</p></div>
-      <div id="skillsGrid" class="cards-grid"></div>
-    </section>
-
     <section id="proyectos" class="section-shell content-section">
-      <div class="section-heading"><div><p class="eyebrow">Portafolio</p><h2>Proyectos relevantes</h2></div><p>Proyectos académicos, institucionales y tecnológicos.</p></div>
-      <div id="projectsGrid" class="cards-grid"></div>
-    </section>
-
-    <section id="publicaciones" class="section-shell content-section">
-      <div class="section-heading"><div><p class="eyebrow">Producción</p><h2>Publicaciones</h2></div><p>Libros, artículos y material académico.</p></div>
-      <div id="publicationsGrid" class="cards-grid"></div>
-    </section>
-
-    <section id="certificados" class="section-shell content-section">
-      <div class="section-heading"><div><p class="eyebrow">Evidencias</p><h2>Cursos y certificados</h2></div><p>Organizados por categoría. Cuando exista un archivo, aparecerá el botón para abrirlo.</p></div>
-      <div id="coursesGroups" class="accordion-list"></div>
-    </section>
-
-    <section id="idiomas" class="section-shell content-section split-section">
-      <div>
-        <div class="section-heading compact"><div><p class="eyebrow">Comunicación</p><h2>Idiomas</h2></div></div>
-        <div id="languagesList" class="simple-list"></div>
-      </div>
-      <div id="referencias">
-        <div class="section-heading compact"><div><p class="eyebrow">Contacto profesional</p><h2>Referencias</h2></div></div>
-        <div id="referencesList" class="simple-list"></div>
-      </div>
+      <div class="section-heading"><div><p class="eyebrow">Portafolio</p><h2>Proyectos y publicaciones</h2></div></div>
+      <div id="featuredGrid" class="cards-grid"></div>
     </section>
   </main>
 
-  <footer class="footer section-shell">
-    <div><strong>Jefferson Villarreal</strong><p>Perfil profesional y portafolio.</p></div>
-    <div class="footer-actions"><a href="#inicio">Volver arriba</a></div>
-  </footer>
+  <footer class="footer section-shell"><div><strong>Jefferson Villarreal</strong><p>Perfil profesional y portafolio.</p></div><a href="#inicio">Volver arriba</a></footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./js/config.js"></script>
   <script src="./js/data.js"></script>
+  <script src="./js/storage.js"></script>
   <script src="./js/public.js"></script>
 </body>
 </html>
