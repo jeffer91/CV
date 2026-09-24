@@ -23,13 +23,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Configure Pages
+        id: pages
+        continue-on-error: true
         uses: actions/configure-pages@v5
         with:
           enablement: true
       - name: Upload site
+        if: steps.pages.outcome == 'success'
         uses: actions/upload-pages-artifact@v3
         with:
           path: "."
       - name: Deploy
+        if: steps.pages.outcome == 'success'
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Pages pending activation
+        if: steps.pages.outcome != 'success'
+        run: echo "Enable GitHub Pages once in Settings > Pages, select GitHub Actions, then re-run this workflow."
