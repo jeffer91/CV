@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0e2458" />
+  <title>CV | Jefferson Villarreal</title>
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" id="backToProfiles" href="../"><span class="brand-mark">JV</span><span><strong>Jefferson Villarreal</strong><small>CV especializado</small></span></a>
+    <nav class="main-nav"><a href="#experiencia">Experiencia</a><a href="#docencia">Docencia</a><a href="#formacion">Formación</a><a href="#competencias">Competencias</a></nav>
+  </header>
+
+  <main id="profileApp">
+    <section class="hero section-shell profile-hero">
+      <div class="hero-photo-wrap"><img id="profilePhoto" class="hero-photo" alt="Jefferson Villarreal" /></div>
+      <div class="hero-copy">
+        <p class="eyebrow">Perfil profesional especializado</p>
+        <h1 id="profileName">Jefferson Villarreal</h1>
+        <h2 id="profileTitle"></h2>
+        <p id="profileHeadline" class="muted strong"></p>
+        <p id="profileSummary" class="lead"></p>
+        <div id="contactActions" class="contact-actions"></div>
+      </div>
+      <aside class="hero-card"><strong>CV abierto y verificable</strong><p>Este perfil prioriza la experiencia, formación y evidencias relacionadas con el área seleccionada.</p><button class="button secondary" onclick="window.print()">Imprimir / guardar PDF</button></aside>
+    </section>
+
+    <section id="experiencia" class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Trayectoria</p><h2>Experiencia relacionada</h2></div></div><div id="experienceList" class="timeline"></div></section>
+    <section id="docencia" class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Educación superior</p><h2>Experiencia docente</h2></div></div><div id="teachingList" class="cards-grid"></div></section>
+    <section id="formacion" class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Formación</p><h2>Educación</h2></div></div><div id="educationGrid" class="cards-grid"></div></section>
+    <section id="competencias" class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Capacidades</p><h2>Competencias clave</h2></div></div><div id="skillsGrid" class="cards-grid"></div></section>
+    <section class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Actualización</p><h2>Formación complementaria</h2></div></div><div id="coursesGrid" class="cards-grid"></div></section>
+    <section class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Portafolio</p><h2>Proyectos relevantes</h2></div></div><div id="projectsGrid" class="cards-grid"></div></section>
+    <section class="section-shell content-section"><div class="section-heading"><div><p class="eyebrow">Producción</p><h2>Publicaciones</h2></div></div><div id="publicationsGrid" class="cards-grid"></div></section>
+  </main>
+
+  <footer class="footer section-shell"><div><strong>Jefferson Villarreal</strong><p id="downloadHint"></p></div><a href="../">Ver todos los perfiles</a></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/config.js"></script>
+  <script src="../js/data.js"></script>
+  <script src="../js/storage.js"></script>
+  <script src="../js/profile.js"></script>
+</body>
+</html>
