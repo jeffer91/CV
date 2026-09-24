@@ -1,32 +1,40 @@
 # CV · Jefferson Villarreal
 
-Aplicación web con dos áreas:
+Sistema de CV maestro con múltiples perfiles públicos y un panel privado de administración.
 
-- **Perfil público:** `/<repo>/`
-- **Administrador:** `/<repo>/admin/`
+## Estructura
 
-## Funciones incluidas
+- `/` — selector general de perfiles.
+- `/coordinador-academico/`, `/docencia-mecatronica/`, `/fablab/`, etc. — CV públicos especializados.
+- `/admin/` — administración de perfil, experiencia, docencia, formación, cursos, proyectos, publicaciones, perfiles, evidencias y documentos privados.
+- Supabase — autenticación, base maestra JSON y almacenamiento de archivos.
 
-- Perfil profesional completo y navegable.
-- Experiencia, formación, competencias, proyectos, publicaciones, cursos, idiomas y referencias.
-- Evidencias/certificados con enlaces cuando estén cargados.
-- Panel administrador protegido mediante Supabase Auth.
-- Preparación para Storage de Supabase.
-- 7 perfiles de CV especializados.
-- Generador de CV de una sola página A4 con QR al perfil público.
-- Impresión / guardado como PDF desde el navegador.
+## Fuente de datos
+
+`js/data.js` es un respaldo inicial. Una vez configurado Supabase, el administrador publica la versión maestra en la tabla `cv_master`. Los perfiles públicos cargan esa versión automáticamente.
 
 ## Seguridad
 
-El PIN **no está guardado en el repositorio**. El acceso del administrador se valida con Supabase Auth. El perfil público no muestra ningún enlace hacia el administrador.
+- Nunca guardar PIN, contraseña o `service_role` en GitHub.
+- La cédula solo se usa en el formulario de acceso para derivar el correo interno del administrador.
+- `evidencias-publicas`: títulos y certificados que sí pueden mostrarse.
+- `documentos-privados`: identificación y documentos sensibles; no tienen lectura pública.
 
-## Supabase
+## Configuración inicial
 
-1. Crear o seleccionar un proyecto Supabase.
+1. Crear/seleccionar proyecto Supabase.
 2. Ejecutar `supabase/schema.sql`.
-3. Crear el usuario administrador en Supabase Auth usando el correo interno indicado en `supabase/schema.sql` y el PIN como contraseña.
-4. En la pantalla de acceso de `/admin/`, abrir **Conectar Supabase por primera vez** e ingresar la URL y la clave pública `anon`.
+3. Crear el usuario administrador en Supabase Auth.
+4. Entrar a `/admin/` y usar “Conectar Supabase por primera vez”.
+5. Publicar el borrador maestro.
+6. GitHub Actions despliega automáticamente el sitio a GitHub Pages desde `main`.
 
-Nunca se debe usar la clave `service_role` en el navegador.
+## Perfiles incluidos
 
-La foto actual se obtuvo del CV anterior proporcionado por el propietario del repositorio.
+Educación y gestión: Coordinación Académica, Titulación, Calidad, Gestión Académica, Investigación/Innovación y Educación Continua.
+
+Docencia: Mecatrónica, Electrónica, Industrial, Redes/Telecom, Automotriz, Motos e Investigación.
+
+Ingeniería/industria: Mecatrónica, Electrónica/Automatización, Industrial, Procesos, FabLab y Proyectos.
+
+Negocios: Marketing, Marketing Digital/SEO y Ventas.
