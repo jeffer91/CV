@@ -38,3 +38,8 @@ Docencia: Mecatrónica, Electrónica, Industrial, Redes/Telecom, Automotriz, Mot
 Ingeniería/industria: Mecatrónica, Electrónica/Automatización, Industrial, Procesos, FabLab y Proyectos.
 
 Negocios: Marketing, Marketing Digital/SEO y Ventas.
+
+
+## Despliegue
+
+GitHub Pages: activo con GitHub Actions.
