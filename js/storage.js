@@ -1,6 +1,7 @@
 (() => {
   const clone=x=>JSON.parse(JSON.stringify(x));
   const parse=raw=>{try{return raw?JSON.parse(raw):null}catch{return null}};
+    let sharedClient=null;
 
   function getConfig(){
     const local=parse(localStorage.getItem("cv_supabase_config"))||{};
@@ -10,7 +11,9 @@
   function getClient(){
     const cfg=getConfig();
     if(!cfg.url||!cfg.anon||!window.supabase?.createClient)return null;
-    return window.supabase.createClient(cfg.url,cfg.anon);
+        if(sharedClient)return sharedClient;
+    sharedClient=window.supabase.createClient(cfg.url,cfg.anon);
+    return sharedClient;
   }
   async function loadMaster(fallback){
     const base=clone(fallback||window.CV_DATA||{});
